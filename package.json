@@ -3,10 +3,8 @@
 	"version": "0.0.1",
 	"private": true,
 	"scripts": {
-		"build:watch": "esbuild ./src/index.ts --bundle --platform=node --target=node20.10.0 --sourcemap=external --minify --color --watch --outdir=dist",
-		"node:watch": "doppler run -- node --enable-source-maps --watch ./dist/index.js",
 		"dev": "esbuild-dev --bundle --platform=node --target=node20.10.0 --sourcemap=external --minify --color --watch ./src/index.ts",
-		"build": "esbuild ./src/index.ts --bundle --platform=node --target=node20.10.0 --sourcemap=external --minify --color --outfile=./dist/server-tools.js",
+		"build": "esbuild ./src/index.ts --bundle --platform=node --target=node20.10.0 --sourcemap=external --minify --color --outdir=./dist/",
 		"lint": "eslint ."
 	},
 	"devDependencies": {

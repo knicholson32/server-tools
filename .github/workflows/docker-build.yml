@@ -54,6 +54,7 @@ jobs:
           target: prod
           outputs: type=image,name=${{ vars.REGISTRY_IMAGE }},push-by-digest=true,name-canonical=true,push=true
           labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ steps.meta.outputs.tags }}
           cache-from: type=registry,ref=${{ vars.CACHE_REGISTRY_IMAGE }}:buildcache_${{ env.platform_short }}
           cache-to: type=registry,ref=${{ vars.CACHE_REGISTRY_IMAGE }}:buildcache_${{ env.platform_short }},mode=max
       - name: Export digest

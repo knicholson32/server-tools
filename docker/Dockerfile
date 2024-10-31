@@ -4,14 +4,14 @@ ARG USR_LOCAL_EXPORT=/export-usr-bin
 ARG ROOT_EXPORT=/export-root
 
 ######### Base Image ###############################################################################
-FROM node:${NODE_VERSION}-slim as base
+FROM node:${NODE_VERSION}-slim AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
 
 
 ######### Build Dependancies #######################################################################
-FROM base as build-deps
+FROM base AS build-deps
 
 # Copy the application and move to the copied folder
 COPY ./ /app/
@@ -22,7 +22,7 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
 
 ######### Production Dependancies ##################################################################
-FROM base as prod-deps
+FROM base AS prod-deps
 
 # Copy the application and move to the copied folder
 COPY ./ /app/
@@ -32,7 +32,7 @@ WORKDIR /app
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
 
 ######### Build Dependancies #######################################################################
-FROM base as build
+FROM base AS build
 
 # Copy the application and move to the copied folder
 COPY ./ /app/
@@ -44,14 +44,14 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 RUN pnpm run build
 
 ######### Production Stage #########################################################################
-FROM base as prod
+FROM base AS prod
 
 # Assign labels
-LABEL org.opencontainers.image.title server-tools
-LABEL org.opencontainers.image.description Docker container for allowing basic server control from Home Assistant
-LABEL org.opencontainers.image.documentation https://github.com/knicholson32/server-tools
-LABEL org.opencontainers.image.authors Keenan Nicholson, Norris Nicholson
-LABEL org.opencontainers.image.source https://github.com/knicholson32/server-tools
+LABEL org.opencontainers.image.title="server-tools"
+LABEL org.opencontainers.image.description="Docker container for allowing basic server control from Home Assistant"
+LABEL org.opencontainers.image.documentation="https://github.com/knicholson32/server-tools"
+LABEL org.opencontainers.image.authors="Keenan Nicholson, Norris Nicholson"
+LABEL org.opencontainers.image.source="https://github.com/knicholson32/server-tools"
 
 COPY --from=prod-deps /app/node_modules /app/node_modules
 COPY --from=build /app/dist /app/dist

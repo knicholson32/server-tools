@@ -4,8 +4,6 @@ services:
     image: 'keenanrnicholson/server-tools:local'
     container_name: server-tools
     restart: unless-stopped
-    volumes:
-      - ../library/db:/db
     environment:
       PUID: 1000
       PGID: 1000

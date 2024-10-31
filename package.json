@@ -1,0 +1,23 @@
+{
+	"name": "server-tools",
+	"version": "0.0.1",
+	"private": true,
+	"scripts": {
+		"build:watch": "esbuild ./src/index.ts --bundle --platform=node --target=node20.10.0 --sourcemap=external --minify --color --watch --outdir=dist",
+		"node:watch": "doppler run -- node --enable-source-maps --watch ./dist/index.js",
+		"dev": "esbuild-dev --bundle --platform=node --target=node20.10.0 --sourcemap=external --minify --color --watch ./src/index.ts",
+		"build": "esbuild ./src/index.ts --bundle --platform=node --target=node20.10.0 --sourcemap=external --minify --color --outfile=./dist/server-tools.js",
+		"lint": "eslint ."
+	},
+	"devDependencies": {
+		"@hyrious/esbuild-dev": "^0.10.11",
+		"esbuild": "^0.24.0",
+		"eslint": "^9.13.0",
+		"tsc": "^2.0.4",
+		"typescript": "^5.0.0",
+		"uuid": "^9.0.1"
+	},
+	"dependencies": {
+		"chalk": "^4"
+	}
+}

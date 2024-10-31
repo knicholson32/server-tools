@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   contour:
-    image: 'keenanrnicholson/server-tools:local'
+    image: 'keenanrnicholson/server-tools:main'
     container_name: server-tools
     restart: unless-stopped
     environment:

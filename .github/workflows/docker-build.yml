@@ -17,7 +17,6 @@ jobs:
         platform:
           - linux/amd64
           - linux/arm64
-          - linux/ppc64le
     steps:
       - name: Set platform    
         run: |
@@ -31,8 +30,8 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            ${{ vars.REGISTRY_IMAGE }}
-            ghcr.io/knicholson32/server-tools
+            ${{ vars.REGISTRY_IMAGE_DOCKER }}
+            ${{ vars.REGISTRY_IMAGE_GHCR }}
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
@@ -58,13 +57,13 @@ jobs:
             GIT_COMMIT=${{ github.sha }}
             GIT_REF=${{ github.ref_name }}
             GIT_REF_PROTECTED=${{ github.ref_protected }}
-            REGISTRY_IMAGE=${{ vars.REGISTRY_IMAGE }}
+            REGISTRY_IMAGE=${{ vars.REGISTRY_IMAGE_DOCKER }}
             CI=true
           file: docker/Dockerfile
           target: prod
           outputs: |
-            type=image,name=${{ vars.REGISTRY_IMAGE }},push-by-digest=false,name-canonical=true
-            type=image,name=ghcr.io/knicholson32/server-tools,push-by-digest=false,name-canonical=true
+            type=image,name=${{ vars.REGISTRY_IMAGE_DOCKER }},push-by-digest=false,name-canonical=true
+            type=image,name=${{ vars.REGISTRY_IMAGE_GHCR }},push-by-digest=false,name-canonical=true
           labels: ${{ steps.meta.outputs.labels }}
           tags: ${{ steps.meta.outputs.tags }}
           push: ${{ github.event_name != 'pull_request' }}
@@ -96,16 +95,13 @@ jobs:
         with:
           name: digests-amd64
           path: /tmp/digests
+
       - name: Download digests - arm64
         uses: actions/download-artifact@v4
         with:
           name: digests-arm64
           path: /tmp/digests
-      - name: Download digests - ppc64le
-        uses: actions/download-artifact@v4
-        with:
-          name: digests-ppc64le
-          path: /tmp/digests
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Docker meta
@@ -113,8 +109,8 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            ${{ vars.REGISTRY_IMAGE }}
-            ghcr.io/knicholson32/server-tools
+            ${{ vars.REGISTRY_IMAGE_DOCKER }}
+            ${{ vars.REGISTRY_IMAGE_GHCR }}
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
@@ -130,7 +126,7 @@ jobs:
         working-directory: /tmp/digests
         run: |
           docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
-            $(printf '${{ vars.REGISTRY_IMAGE }}@sha256:%s ' *)
+            $(printf '${{ vars.REGISTRY_IMAGE_DOCKER }}@sha256:%s ' *)
       - name: Inspect image Docker Hub
         run: |
-          docker buildx imagetools inspect ${{ vars.REGISTRY_IMAGE }}:${{ steps.meta.outputs.version }}
+          docker buildx imagetools inspect ${{ vars.REGISTRY_IMAGE_DOCKER }}:${{ steps.meta.outputs.version }}

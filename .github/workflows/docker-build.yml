@@ -15,9 +15,9 @@ jobs:
       fail-fast: false
       matrix:
         platform:
-          - linux/amd64
+          # - linux/amd64
           - linux/arm64
-          - linux/ppc64le
+          # - linux/ppc64le
     steps:
       - name: Set platform    
         run: |
@@ -30,7 +30,9 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ vars.REGISTRY_IMAGE }}
+          images: |
+            ${{ vars.REGISTRY_IMAGE }}
+            ghcr.io/knicholson32/server-tools
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
@@ -39,6 +41,12 @@ jobs:
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Build and push
         id: build

@@ -3,12 +3,26 @@ services:
   dev:
     image: server-tools:dev
     container_name: server-tools-dev
+    privileged: true
     volumes:
       - ../node_modules:/app/node_modules
       - ../:/app
+      # https://stackoverflow.com/questions/63266824/how-to-shutdown-the-host-ubuntu-inside-a-docker-container
+      # - /bin/systemctl:/bin/systemctl
+      # - /run/systemd/system:/run/systemd/system
+      # - /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket
+      # - /sys/fs/cgroup:/sys/fs/cgroup
 
     environment:
-      TZ: 'America/New_York'
+      PUID: 1000
+      PGID: 1000
+      NAME: teslerdev_0x9083ec79a367049261b59fc4
+      MQTT_VERSION: '4'
+      MQTT_HOSTNAME: ${MQTT_HOSTNAME}
+      MQTT_USERNAME: ${MQTT_USERNAME}
+      MQTT_PASSWORD: ${MQTT_PASSWORD}
+      SSH_USERNAME: ${SSH_USERNAME}
+      SSH_PASSWORD: ${SSH_PASSWORD}
 
     stop_signal: SIGKILL
     working_dir: /app

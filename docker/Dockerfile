@@ -20,6 +20,8 @@ WORKDIR /app
 # Install build dependancies
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
+STOPSIGNAL SIGTERM
+
 
 ######### Production Dependancies ##################################################################
 FROM base AS prod-deps
@@ -68,5 +70,5 @@ ENV GIT_REF_PROTECTED=$GIT_REF_PROTECTED
 ENV REGISTRY_IMAGE=$REGISTRY_IMAGE
 ENV CI=$CI
 
-STOPSIGNAL SIGKILL
+STOPSIGNAL SIGTERM
 CMD [ "node", "--enable-source-maps", "/app/dist/index.js" ]

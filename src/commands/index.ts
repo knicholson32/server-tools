@@ -7,7 +7,7 @@ const execSSH = (cmd: string) => {
     const ssh = new NodeSSH();
 
     ssh.connect({
-      host: 'host.docker.internal',
+      host: env.SSH_HOSTNAME,
       username: env.SSH_USERNAME,
       password: env.SSH_PASSWORD,
     }).then(() => {

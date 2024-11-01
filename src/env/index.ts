@@ -5,8 +5,9 @@ export const port = '1883';
 export const host = process.env.MQTT_HOSTNAME;
 export const clientId = `${name}`;
 
-if (process.env.SSH_USERNAME === undefined || process.env.SSH_PASSWORD === undefined) throw new Error('SSH_USER and SSH_PASS must be set as environmental variables.');
+if (process.env.SSH_HOSTNAME === undefined || process.env.SSH_USERNAME === undefined || process.env.SSH_PASSWORD === undefined) throw new Error('SSH_HOSTNAME, SSH_USER, and SSH_PASS must be set as environmental variables.');
 
+export const SSH_HOSTNAME = process.env.SSH_USERNAME;
 export const SSH_USERNAME = process.env.SSH_USERNAME;
 export const SSH_PASSWORD = process.env.SSH_PASSWORD;
 

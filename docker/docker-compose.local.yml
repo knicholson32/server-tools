@@ -1,9 +1,10 @@
 version: '3.8'
 services:
-  contour:
+  server-tools:
     image: 'server-tools:local'
     container_name: server-tools
     restart: unless-stopped
+    privileged: true
     
     environment:
       PUID: 1000
@@ -13,5 +14,6 @@ services:
       MQTT_HOSTNAME: ${MQTT_HOSTNAME}
       MQTT_USERNAME: ${MQTT_USERNAME}
       MQTT_PASSWORD: ${MQTT_PASSWORD}
+      SSH_HOSTNAME: host.docker.internal
       SSH_USERNAME: ${SSH_USERNAME}
       SSH_PASSWORD: ${SSH_PASSWORD}

@@ -1,26 +1,20 @@
-import SSH from 'simple-ssh';
+import { NodeSSH } from 'node-ssh';
 import * as env from '../env';
 import { setSystemAvailability } from '../helpers';
 
 const execSSH = (cmd: string) => {
   return new Promise((resolve, reject) => {
-    const ssh = new SSH({
+    const ssh = new NodeSSH();
+
+    ssh.connect({
       host: 'host.docker.internal',
-      user: env.SSH_USERNAME,
-      pass: env.SSH_PASSWORD,
-    });
-
-    ssh.exec(cmd, { 
-      // out: (stdout) => resolve(stdout),
-      exit(code, stdout, stderr) {
-        resolve({code, stdout, stderr});
-      },
-    }).start();
-
-    ssh.on('error', function (err) {
-      ssh.end();
-      reject(err);
-    });
+      username: env.SSH_USERNAME,
+      password: env.SSH_PASSWORD,
+    }).then(() => {
+      ssh.execCommand(cmd).then((result) => {
+        resolve(result);
+      }).catch(reject);
+    }).catch(reject);
   });
 }
 

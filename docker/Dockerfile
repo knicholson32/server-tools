@@ -18,7 +18,7 @@ COPY ./ /app/
 WORKDIR /app
 
 # Install build dependancies
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store npm install --frozen-lockfile
 
 STOPSIGNAL SIGTERM
 
@@ -31,7 +31,7 @@ COPY ./ /app/
 WORKDIR /app
 
 # Install production dependancies
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store npm install --prod --frozen-lockfile
 
 ######### Build Dependancies #######################################################################
 FROM base AS build
@@ -41,9 +41,9 @@ COPY ./ /app/
 WORKDIR /app
 
 # Install build dependancies
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
-RUN pnpm run build
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store npm install --prod --frozen-lockfile
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store npm install --frozen-lockfile
+RUN npm run build
 
 ######### Production Stage #########################################################################
 FROM base AS prod
